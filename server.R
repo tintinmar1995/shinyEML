@@ -39,7 +39,6 @@ function(input, output, session) {
         email <- emayili::envelope()
         
         email <- email %>%
-          from("shiny@enedis.be") %>%
           to("bob@google.com") %>%
           cc("craig@google.com")
         
@@ -54,7 +53,7 @@ function(input, output, session) {
         
         eml <- as.character(email)
         eml <- strsplit(eml, "\\r\\n")
-        writeLines(eml[[1]], con = file)
+        writeLines(c("X-Unsent: 1", eml[[1]]), con = file)
       }
     )
     
