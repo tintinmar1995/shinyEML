@@ -48,23 +48,26 @@ function(input, output, session) {
         png("my_plot.png")
         plot(my_plot())
         dev.off()
-        img_base64 <- base64enc::base64encode("my_plot.png")
-        #email <- email %>% attachment(path = "my_plot.png", cid = "my_plot")
+        
+        addInlineImage <- function(img, height, width){
+          img_base64 <- base64enc::base64encode(img)
+          return(p(paste0(
+            '<img width="', width,'", height="', height,'" src="data:image/jpeg;base64,', img_base64,'"><img>')))
+        }
         
         # Write email body
         email <- email %>% html(
           tagList(
-            h2("Hello"),
-            p("World!"),
-            img(src=sprintf("data:image/png;base64,%s", img_base64), width='200px', height='180px'),
-            #img(src='cid:my_plot', width='50px', height='50px')
-          )
-        )
+            h2("Hello World!"),
+            p("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."),
+            addInlineImage("my_plot.png", "180px", "200px")))
         
         # Write EML file
         # writeLines instead of cat to ensure consistent CRLF
         # Thanks to X-Unset, Outlook will open eml file as draft
         eml <- as.character(email)
+        eml <- gsub("<p>&lt;img", "<img ", eml, fixed=TRUE)
+        eml <- gsub("&gt;/img&lt;</p>", "/>", eml, fixed=TRUE)
         eml <- strsplit(eml, "\\r\\n")
         writeLines(c("X-Unsent: 1", eml[[1]]), con = file)
       }
