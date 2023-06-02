@@ -51,8 +51,9 @@ function(input, output, session) {
         
         addInlineImage <- function(img, height, width){
           img_base64 <- base64enc::base64encode(img)
+          # Insert fame balise
           return(p(paste0(
-            '<img width="', width,'", height="', height,'" src="data:image/jpeg;base64,', img_base64,'"><img>')))
+            '<iimmgg width="', width,'", height="', height,'" src="data:image/jpeg;base64,', img_base64,'"><iimmgg>')))
         }
         
         # Write email body
@@ -66,8 +67,9 @@ function(input, output, session) {
         # writeLines instead of cat to ensure consistent CRLF
         # Thanks to X-Unset, Outlook will open eml file as draft
         eml <- as.character(email)
-        eml <- gsub("<p>&lt;img", "<img ", eml, fixed=TRUE)
-        eml <- gsub("&gt;/img&lt;</p>", "/>", eml, fixed=TRUE)
+        # Transform fake balise into real balise
+        eml <- gsub("<p>&lt;iimmgg", "<img ", eml, fixed=TRUE)
+        eml <- gsub("&gt;/iimmgg&lt;</p>", "/>", eml, fixed=TRUE)
         eml <- strsplit(eml, "\\r\\n")
         writeLines(c("X-Unsent: 1", eml[[1]]), con = file)
       }
