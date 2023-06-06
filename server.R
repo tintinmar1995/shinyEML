@@ -1,10 +1,8 @@
 #
-# This is the server logic of a Shiny web application. You can run the
-# application by clicking 'Run App' above.
+# An example of a shiny application where user can download
+# an .EML file ready to be sent to co-workers.
 #
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
+# Pretty useful for report automation.
 #
 
 library(shiny)
@@ -40,11 +38,11 @@ function(input, output, session) {
         
         email <- emayili::envelope()
         email <- email %>%
-          to("bob@google.com") %>%
-          cc("craig@google.com") %>% 
+          to("bob@protonmail.com") %>%
+          cc("craig@protonmail.com") %>% 
           subject("Créer automatiquement des emails de rapport depuis Shiny!")
         
-        # Prepare image and attach image
+        # Prepare image and save it in a temporary folder
         png("my_plot.png")
         plot(my_plot())
         dev.off()
@@ -53,7 +51,7 @@ function(input, output, session) {
           img_base64 <- base64enc::base64encode(img)
           # Insert fame balise
           return(p(paste0(
-            '<iimmgg width="', width,'", height="', height,'" src="data:image/jpeg;base64,', img_base64,'"><iimmgg>')))
+            '<iimmgg width="', width,'", height="', height,'" src="data:image/jpeg;base64,', img_base64,'"></iimmgg>')))
         }
         
         # Write email body
