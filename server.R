@@ -49,7 +49,7 @@ function(input, output, session) {
         
         addInlineImage <- function(img, height, width){
           img_base64 <- base64enc::base64encode(img)
-          # Insert fame balise
+          # Insert fake balise
           return(p(paste0(
             '<iimmgg width="', width,'", height="', height,'" src="data:image/jpeg;base64,', img_base64,'"></iimmgg>')))
         }
@@ -62,13 +62,13 @@ function(input, output, session) {
             addInlineImage("my_plot.png", "180px", "200px")))
         
         # Write EML file
-        # writeLines instead of cat to ensure consistent CRLF
-        # Thanks to X-Unset, Outlook will open eml file as draft
         eml <- as.character(email)
         # Transform fake balise into real balise
         eml <- gsub("<p>&lt;iimmgg", "<img ", eml, fixed=TRUE)
         eml <- gsub("&gt;/iimmgg&lt;</p>", "/>", eml, fixed=TRUE)
         eml <- strsplit(eml, "\\r\\n")
+        # writeLines instead of cat to ensure consistent CRLF
+        # Thanks to X-Unset, Outlook will open eml file as draft
         writeLines(c("X-Unsent: 1", eml[[1]]), con = file)
       }
     )
